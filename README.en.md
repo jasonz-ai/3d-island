@@ -54,7 +54,7 @@ Most personal websites and portfolios are flat, 1D scrolling pages. While bespok
 | 🌊 Ocean Archipelago · AI Product Builder (Noon) | 🏜️ Desert Canyon · Creative Tech Designer (Sunset) |
 | :---: | :---: |
 | ![Ocean Archipelago Day](./public/preview/hero-ocean-day.png) | ![Desert Canyon Sunset](./public/preview/hero-desert-sunset.png) |
-| **❄️ Polar Fjord · Indie Founder (Starry Night)** | **🛠 Sims-Style 3D Build Mode · 37 Building Archetypes** |
+| **❄️ Polar Fjord · Indie Founder** (Starry Night) | **🛠 Sims-Style 3D Build Mode · 37 Building Archetypes** |
 | ![Snow Fjord Night](./public/preview/hero-snow-night.png) | ![Sims 3D Build Mode](./public/preview/sims-build-mode.png) |
 
 ---
@@ -65,7 +65,7 @@ Most personal websites and portfolios are flat, 1D scrolling pages. While bespok
 | :--- | :--- |
 | **🎭 4 Persona World Presets** | Instant 1-click switching between **🤖 AI Builder**, **🎨 Creative Designer**, **❄️ Indie Founder**, and **🚀 Research Scholar** worlds ([`src/data/personaPresets.ts`](./src/data/personaPresets.ts)) |
 | **🌍 4 Biomes × 6 World Shapes** | **Ocean / Desert / Snow / Grassland** biomes × **Archipelago / B-612 Highland / Canyon Mesa / Alpine Valley / Crescent Bay / Floating Terraces** non-circular 3D terrains |
-| **🚀 5 Secret-Realm Carriers** | **Submarine Dive (Deep Sea)**, **Camel Caravan (Desert Oasis)**, **Snowball Ski (Aurora Valley)**, **Rocket Launch (Low-Earth Orbit)**, and **Hot-Air Balloon (Cloud Islands)** |
+| **🚀 5 Secret-Realm Carriers** | **Submarine Dive** (Deep Sea), **Camel Caravan** (Desert Oasis), **Snowball Ski** (Aurora Valley), **Rocket Launch** (Low-Earth Orbit), and **Hot-Air Balloon** (Cloud Islands) |
 | **🏛️ 37 Parametric 3D Buildings** | **10 Education** + **10 Hometown/Spirit Landmarks** + **17 Career HQs** — all procedurally built in Three.js with granite plinths, warm courtyard pathway lanterns, entrance canopies, and floating Plumbob crystals |
 | **🛠 Sims-Style 3D Build Dock** | Click any building to swap its 3D model, rotate 90°, apply 6 roof tint palettes, scale (0.7×–1.45×), nudge X/Z coordinates, and place 6 island decor props (B-612 Rose, Fox Bench, Cherry Grove, Campfire Tent, Dutch Windmill, Pet Corgi) |
 | **📄 Smart Resume Text Parser** | Paste any English or Chinese plain-text resume to automatically extract your name, tagline, university, companies, roles, and projects into a 3D island |
@@ -80,17 +80,17 @@ Most personal websites and portfolios are flat, 1D scrolling pages. While bespok
 
 If you want to create and share your 3D island right inside the browser **without writing a single line of code**:
 
-1. **Explore Persona Templates**: Click the 4 persona pills in the top-left **`✦ Presets`** strip to preview different biomes and career setups;
+1. **Explore Persona Templates**: Click the 4 persona pills in the top-left **✦ Presets** strip to preview different biomes and career setups;
 2. **Import Your Resume in 1 Click**:
-   - Click **`🛠 建造模式 (Build Mode)`** in the top-left HUD → click **`📂 全量表单 / JSON (Full Form / JSON)`** in the bottom build dock;
-   - Paste your resume text into the **`📄 Paste Resume Text`** box at the top of the drawer and click **`✨ Parse & Generate My 3D Island`**;
+   - Click **🛠 建造模式 (Build Mode)** in the top-left HUD → click **📂 全量表单 / JSON (Full Form / JSON)** in the bottom build dock;
+   - Paste your resume text into the **📄 Paste Resume Text** box at the top of the drawer and click **✨ Parse & Generate My 3D Island**;
 3. **Customize in Sims 3D Build Mode**:
    - Click any slot pill in the bottom dock (`🎓 Alma Mater`, `🏮 Landmark`, `🏢 Career 1–6`, `🌍 Terrain Shape`, `✨ Decor Props`) or click any 3D building directly on the island;
    - Pick from 37 architectural styles in the left catalog grid to swap the 3D building in real time;
    - Edit the organization name, role title, period, and highlights on the right inspector panel, or adjust rotation (`↻ 90°`), color tint, scale, and X/Z offset;
 4. **Share or Export a Postcard**:
-   - Click **`🔗 Copy Share Link`** to encode your entire island into a `#island=...` URL in clean visitor mode (`?view=visitor`);
-   - Click **`📸 Export Polaroid`** to download a high-resolution PNG postcard of your 3D world.
+   - Click **🔗 Share Link** to encode your entire island into a `#island=...` URL in clean visitor mode (`?view=visitor`);
+   - Click **📸 Polaroid** to download a high-resolution PNG postcard of your 3D world.
 
 ---
 
@@ -106,8 +106,8 @@ If you want to host your own permanent 3D personal homepage on a custom domain (
    npm run dev
    ```
 2. **Design Your Island & Copy the JSON**:
-   - Open `http://localhost:5173`, enter **`🛠 Build Mode`**, and customize your profile, buildings, biome, and project booths;
-   - Open **`📂 Full Form / JSON`** → scroll to **`Import / Export JSON`** → click **`Copy JSON`**.
+   - Open `http://localhost:5173`, enter **🛠 Build Mode**, and customize your profile, buildings, biome, and project booths;
+   - Open **📂 Full Form / JSON** → scroll to **Import / Export JSON** → click **Copy JSON**.
 3. **Update the Default Profile**:
    - Open [`src/data/defaultProfile.ts`](./src/data/defaultProfile.ts);
    - Replace `export const defaultProfile: ProfileConfig = { ... }` with your copied JSON, then commit and push:
@@ -126,10 +126,10 @@ If you want to host your own permanent 3D personal homepage on a custom domain (
 Want a bespoke 1:1 3D replica of your actual university gate or company headquarters? We built an AI prompt generator tailored specifically to this codebase:
 
 1. **Open the Custom Building Guide**:
-   - Enter **`🛠 Build Mode`** and click the highlighted **`✨ AI / Custom · Build Your Own Alma Mater / HQ`** card at the bottom of the catalog (or inside the right Customize Drawer);
+   - Enter **🛠 Build Mode** and click the highlighted **✨ AI / Custom · Build Your Own Alma Mater / HQ** card at the bottom of the catalog (or inside the right Customize Drawer);
 2. **Option A — Let AI (Claude Code / Cursor / Codex) Write the Three.js Code**:
    - Enter your target building name, category (`education / career / landmark`), and visual traits (e.g., *"Red brick triple arch gate, glass pyramid atrium, golden ginkgo trees"*);
-   - Click **`📋 Copy AI Modeling Prompt`** and paste it into **Claude Code, Cursor, or Codex**;
+   - Click **📋 Copy AI Modeling Prompt** and paste it into **Claude Code, Cursor, or Codex**;
    - The AI will automatically register the new `BuildingStyle` in [`src/schema/profile.ts`](./src/schema/profile.ts) and generate the procedural Three.js mesh in [`src/scene/buildings.ts`](./src/scene/buildings.ts) complete with granite plinth, pathway lights, and floating Plumbob!
 3. **Option B — Request Bespoke Customization**:
    - Prefer not to touch code? Click **[💬 Open a Custom Building Issue](https://github.com/jasonz-ai/3d-island/issues/new?title=%5BCustom+3D+Building%5D+Request+Custom+3D+Landmark)** or reach out to the author [`@jasonz-ai`](https://github.com/jasonz-ai).
@@ -356,6 +356,7 @@ npm run preview
 
 ## 🙏 Inspiration & Credits
 
+- **Original Creative Inspiration**: The initial spark for this project came from **[Joshua's World](https://joshuas.world/)** — seeing how a personal portfolio could be reimagined as a charming, explorable 3D miniature island inspired us to build this parametric, zero-code open-source engine from scratch so anyone can create their own 3D world;
 - **Visual & Interaction Aesthetics**: Inspired by *The Sims*, *Monument Valley*, and the classic isometric low-poly diorama tradition in the creative WebGL community;
 - **Open-Source Ecosystem**: Built on top of [Three.js](https://threejs.org/), [Vite](https://vitejs.dev/), and [TypeScript](https://www.typescriptlang.org/).
 

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <rect width="120" height="120" rx="26" fill="#1E3A8A"/>
+  <!-- Golden Finial -->
+  <circle cx="60" cy="18" r="5" fill="#FACC15"/>
+  <path d="M58 22 L62 22 L63 28 L57 28 Z" fill="#FACC15"/>
+  <!-- Top Cobalt & Gold Roof Tier -->
+  <path d="M60 26 L84 40 L36 40 Z" fill="#38BDF8"/>
+  <rect x="44" y="40" width="32" height="5" fill="#DC2626"/>
+  <!-- Middle Roof Tier -->
+  <path d="M60 42 L94 56 L26 56 Z" fill="#60A5FA"/>
+  <rect x="36" y="56" width="48" height="6" fill="#DC2626"/>
+  <!-- Lower Roof Tier -->
+  <path d="M60 58 L104 72 L16 72 Z" fill="#93C5FD"/>
+  <!-- Vermilion Pillars & Hall -->
+  <rect x="28" y="72" width="64" height="14" fill="#DC2626"/>
+  <rect x="35" y="74" width="5" height="12" fill="#FEF08A"/>
+  <rect x="49" y="74" width="5" height="12" fill="#FEF08A"/>
+  <rect x="66" y="74" width="5" height="12" fill="#FEF08A"/>
+  <rect x="80" y="74" width="5" height="12" fill="#FEF08A"/>
+  <!-- 3-Tier White Marble Altar -->
+  <rect x="20" y="86" width="80" height="6" rx="2" fill="#F8FAFC"/>
+  <rect x="14" y="92" width="92" height="7" rx="2" fill="#E2E8F0"/>
+  <text x="60" y="112" text-anchor="middle" font-family="'Noto Sans SC', sans-serif" font-weight="900" font-size="11" fill="#FACC15" letter-spacing="2">BEIJING · 天坛</text>
+</svg>

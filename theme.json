@@ -1,0 +1,104 @@
+{
+  "version": 3,
+  "note": "继承自 3d-island-blender/theme.json (UI 设计师 2026-10-13)，扩展 desert 沙漠绿洲主题与第二空间秘境配色。全站保持单一强调色 #E8643A；其余为低饱和暖色调。",
+  "shared": {
+    "building": "#EFEAE0",
+    "buildingShade": "#D9D2C3",
+    "roof": "#3A3F36",
+    "accent": "#E8643A",
+    "text": "#1C1F1A",
+    "textMuted": "#6B7064",
+    "card": "#FAF8F3",
+    "line": "#DED8CA"
+  },
+  "terrains": {
+    "ocean": {
+      "label": "海岛 · Ocean Island",
+      "ground": "#A6B28B",
+      "groundSide": "#B1A083",
+      "sand": "#D9C5A4",
+      "water": "#7FB5A0",
+      "sky": "#EEF1EA",
+      "path": "#E6DAC3",
+      "foliage": ["#5E8C61", "#739E6E", "#4D7A52"]
+    },
+    "desert": {
+      "label": "沙漠 · Desert & Oasis",
+      "ground": "#DFC396",
+      "groundSide": "#B89566",
+      "sand": "#E8D2AC",
+      "water": "#6FA89E",
+      "sky": "#F4ECE0",
+      "path": "#C9AA7C",
+      "foliage": ["#6E8B57", "#849B64", "#557344"]
+    },
+    "snow": {
+      "label": "雪山 · Snow Peak",
+      "ground": "#F2F3F0",
+      "groundSide": "#B8BCB6",
+      "sand": "#DCE0DC",
+      "water": "#B9CCD0",
+      "sky": "#E7ECEE",
+      "path": "#CFD5D2",
+      "foliage": ["#4E6B58", "#627D6B", "#3E5747"]
+    },
+    "grassland": {
+      "label": "草原 · Grassland",
+      "ground": "#B9C79A",
+      "groundSide": "#8F8466",
+      "sand": "#D4C6A1",
+      "water": "#A7C2BE",
+      "sky": "#F1EFE6",
+      "path": "#E3D7BE",
+      "foliage": ["#5B8752", "#729B63", "#497042"]
+    }
+  },
+  "realms": {
+    "submarine": {
+      "label": "潜艇入海 → 深海秘境",
+      "ctaEnter": "乘潜艇入海 ↓",
+      "ctaExit": "浮出水面 ↑",
+      "sky": "#1D4250",
+      "fog": "#1D4250",
+      "stageColor": "#2E5E6E"
+    },
+    "camel": {
+      "label": "骆驼远行 → 沙漠绿洲",
+      "ctaEnter": "随骆驼去绿洲 →",
+      "ctaExit": "返回主沙丘 ←",
+      "sky": "#EADBC6",
+      "fog": "#EADBC6",
+      "stageColor": "#6FA89E"
+    },
+    "snowball": {
+      "label": "雪人滑雪 → 山脚极光冰谷",
+      "ctaEnter": "随雪人滑雪下山 ↘",
+      "ctaExit": "乘缆车回雪山营地 ↖",
+      "sky": "#1E2D3B",
+      "fog": "#1E2D3B",
+      "stageColor": "#63A394"
+    },
+    "rocket": {
+      "label": "火箭点火 → 近地轨道",
+      "ctaEnter": "点火升入星轨 ↑",
+      "ctaExit": "返回地面发射台 ↓",
+      "sky": "#1B222C",
+      "fog": "#1B222C",
+      "stageColor": "#3A4656"
+    },
+    "balloon": {
+      "label": "热气球升空 → 云端浮岛",
+      "ctaEnter": "乘热气球上云端 ↑",
+      "ctaExit": "降落回到地面 ↓",
+      "sky": "#E8EEEA",
+      "fog": "#E8EEEA",
+      "stageColor": "#FFFFFF"
+    }
+  },
+  "rules": [
+    "accent (#E8643A) 只用在：核心载具点睛处、当前选中/悬停的建筑标签或旗帜、主行动按钮。一屏不超过 3 处。",
+    "校旗和 logo 是用户可配置项，挂杆和底牌使用 roof 色 (#3A3F36)。",
+    "假阴影用 buildingShade (#D9D2C3)，不另加死黑灰色。",
+    "主世界天空用纯色，不做紫蓝渐变，雾色等于当前空间 sky 色。"
+  ]
+}

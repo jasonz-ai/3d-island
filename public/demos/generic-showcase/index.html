@@ -1,0 +1,1412 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Island Studio · 千人千世界 3D 个人主页生成器交互展台</title>
+    <style>
+      :root {
+        --bg: #0b1120;
+        --bg-soft: #111827;
+        --card: rgba(22, 31, 51, 0.86);
+        --card-hover: rgba(30, 42, 68, 0.95);
+        --border: rgba(148, 163, 184, 0.18);
+        --border-strong: rgba(56, 189, 248, 0.45);
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --accent: #38bdf8;
+        --accent-2: #f97316;
+        --accent-3: #a855f7;
+        --success: #10b981;
+        --radius-lg: 18px;
+        --radius-md: 12px;
+        --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background:
+          radial-gradient(circle at 12% 10%, rgba(56, 189, 248, 0.16), transparent 36%),
+          radial-gradient(circle at 88% 14%, rgba(249, 115, 22, 0.14), transparent 38%),
+          radial-gradient(circle at 50% 90%, rgba(168, 85, 247, 0.12), transparent 45%),
+          var(--bg);
+        color: var(--text);
+        line-height: 1.55;
+        min-height: 100vh;
+        padding-bottom: 48px;
+      }
+
+      .container {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px 24px 0;
+      }
+
+      /* Top Hero Bar */
+      .hero {
+        position: relative;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.85));
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 26px 28px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(56, 189, 248, 0.08), rgba(249, 115, 22, 0.08));
+        pointer-events: none;
+      }
+
+      .hero-top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        background: rgba(56, 189, 248, 0.14);
+        color: #7dd3fc;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        margin-bottom: 10px;
+      }
+
+      .hero h1 {
+        font-size: clamp(22px, 2.6vw, 30px);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+      }
+
+      .hero p {
+        color: var(--text-muted);
+        font-size: 14px;
+        max-width: 720px;
+      }
+
+      .hero-stats {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .stat-pill {
+        background: rgba(15, 23, 42, 0.78);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 10px 15px;
+        text-align: center;
+        min-width: 92px;
+      }
+
+      .stat-pill .num {
+        font-size: 20px;
+        font-weight: 800;
+        color: #38bdf8;
+        display: block;
+        line-height: 1.15;
+      }
+
+      .stat-pill .lbl {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      /* Persona Switcher Bar */
+      .persona-bar {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: 860px) {
+        .persona-bar {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      .persona-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 16px;
+        cursor: pointer;
+        text-align: left;
+        color: var(--text);
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .persona-card:hover {
+        background: var(--card-hover);
+        transform: translateY(-2px);
+      }
+
+      .persona-card.active {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent), 0 12px 28px rgba(56, 189, 248, 0.18);
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.94));
+      }
+
+      .persona-badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #cbd5e1;
+        margin-bottom: 6px;
+      }
+
+      .persona-card.active .persona-badge {
+        background: rgba(56, 189, 248, 0.2);
+        color: #7dd3fc;
+      }
+
+      .persona-title {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .persona-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* Navigation Tabs */
+      .tabs-nav {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+      }
+
+      .tab-btn {
+        background: rgba(30, 41, 59, 0.65);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        padding: 9px 16px;
+        border-radius: 11px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s ease;
+      }
+
+      .tab-btn:hover {
+        color: var(--text);
+        background: rgba(51, 65, 85, 0.7);
+      }
+
+      .tab-btn.active {
+        background: var(--accent);
+        color: #082f49;
+        border-color: var(--accent);
+        box-shadow: 0 6px 18px rgba(56, 189, 248, 0.28);
+      }
+
+      .tab-panel {
+        display: none;
+        animation: fadeIn 0.22s ease;
+      }
+
+      .tab-panel.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Panel 1: Persona Spotlight */
+      .spotlight-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 18px;
+      }
+
+      @media (max-width: 900px) {
+        .spotlight-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .glass-box {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .recipe-chips {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+
+      .recipe-chip {
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 12px;
+      }
+
+      .recipe-chip .k {
+        font-size: 11px;
+        color: var(--text-muted);
+        display: block;
+      }
+
+      .recipe-chip .v {
+        font-size: 13px;
+        font-weight: 700;
+        color: #f1f5f9;
+        margin-top: 2px;
+        display: block;
+      }
+
+      .places-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .place-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        background: rgba(15, 23, 42, 0.55);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 14px;
+      }
+
+      .place-row-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .kind-tag {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+      }
+
+      .kind-education {
+        background: rgba(56, 189, 248, 0.16);
+        color: #7dd3fc;
+      }
+
+      .kind-landmark {
+        background: rgba(244, 63, 94, 0.16);
+        color: #fda4af;
+      }
+
+      .kind-career {
+        background: rgba(249, 115, 22, 0.16);
+        color: #fdba74;
+      }
+
+      .style-pill {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: #a5b4fc;
+        background: rgba(99, 102, 241, 0.14);
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+      }
+
+      .project-card-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .project-item {
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+      }
+
+      .project-item-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+
+      .project-item h4 {
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .booth-badge {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(168, 85, 247, 0.18);
+        color: #d8b4fe;
+      }
+
+      .project-item p {
+        font-size: 12.5px;
+        color: var(--text-muted);
+      }
+
+      /* Panel 2: Biome x Carrier Matrix */
+      .matrix-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      @media (max-width: 860px) {
+        .matrix-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .selector-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .opt-card {
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.16s ease;
+        color: var(--text);
+        text-align: left;
+      }
+
+      .opt-card:hover {
+        border-color: rgba(56, 189, 248, 0.5);
+      }
+
+      .opt-card.selected {
+        border-color: var(--accent);
+        background: rgba(56, 189, 248, 0.12);
+      }
+
+      .opt-card strong {
+        display: block;
+        font-size: 13.5px;
+        margin-bottom: 3px;
+      }
+
+      .opt-card span {
+        font-size: 11.5px;
+        color: var(--text-muted);
+      }
+
+      .preview-stage {
+        border-radius: 16px;
+        padding: 22px;
+        border: 1px solid var(--border);
+        min-height: 290px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .swatch-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+
+      .swatch-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(15, 23, 42, 0.78);
+        border: 1px solid var(--border);
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 11.5px;
+      }
+
+      .swatch-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+      }
+
+      /* Panel 3: 37 Building Styles Gallery */
+      .filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .filter-pills {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .filter-pill {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        padding: 6px 13px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .filter-pill.active {
+        background: rgba(56, 189, 248, 0.18);
+        color: #7dd3fc;
+        border-color: var(--accent);
+      }
+
+      .search-input {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 7px 13px;
+        border-radius: 10px;
+        font-size: 12.5px;
+        min-width: 220px;
+      }
+
+      .styles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 12px;
+      }
+
+      .style-card {
+        background: rgba(15, 23, 42, 0.68);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 10px;
+        transition: transform 0.15s ease, border-color 0.15s ease;
+      }
+
+      .style-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(56, 189, 248, 0.45);
+      }
+
+      .style-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .color-tri {
+        display: flex;
+        gap: 4px;
+      }
+
+      .color-tri span {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+      }
+
+      .style-card h4 {
+        font-size: 13.5px;
+        font-weight: 700;
+        margin-top: 4px;
+      }
+
+      .style-card p {
+        font-size: 11.5px;
+        color: var(--text-muted);
+      }
+
+      /* Panel 4: JSON Generator */
+      .json-workbench {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 18px;
+      }
+
+      @media (max-width: 860px) {
+        .json-workbench {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .form-group {
+        margin-bottom: 12px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: #cbd5e1;
+        margin-bottom: 5px;
+      }
+
+      .form-control {
+        width: 100%;
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 9px 12px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: inherit;
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #38bdf8, #0284c7);
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 11px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.16s ease;
+      }
+
+      .btn-primary:hover {
+        opacity: 0.92;
+      }
+
+      .btn-secondary {
+        background: rgba(249, 115, 22, 0.16);
+        color: #fdba74;
+        border: 1px solid rgba(249, 115, 22, 0.4);
+        padding: 10px 16px;
+        border-radius: 11px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      pre.code-view {
+        background: #070b14;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: #bae6fd;
+        overflow: auto;
+        max-height: 430px;
+        line-height: 1.5;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 22px;
+        right: 22px;
+        background: #10b981;
+        color: #052e16;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+        transition: all 0.22s ease;
+        z-index: 100;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Hero Header -->
+      <header class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="eyebrow">🌍 3D Island Studio · 千人千世界通用模板展台</div>
+            <h1>一份 JSON 履历，生成一座会呼吸的 3D 人生世界</h1>
+            <p>
+              当前处于「通用模板版」岛内交互体验窗。点击下方 4 套创作者预设或切换标签页，探索如何用
+              <strong>4 大生态地貌 × 6 种世界地形 × 5 种第二秘境载具 × 37 座程序化建筑</strong>
+              零代码拼装属于你的 3D 个人主页。
+            </p>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-pill">
+              <span class="num">4 × 6</span>
+              <span class="lbl">地貌与世界地形</span>
+            </div>
+            <div class="stat-pill">
+              <span class="num">5 种</span>
+              <span class="lbl">戏剧秘境转场</span>
+            </div>
+            <div class="stat-pill">
+              <span class="num">37 座</span>
+              <span class="lbl">程序化 3D 建筑</span>
+            </div>
+            <div class="stat-pill">
+              <span class="num">100%</span>
+              <span class="lbl">纯 JSON 驱动</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- 4 Persona Template Cards -->
+      <section class="persona-bar" id="personaBar"></section>
+
+      <!-- Main Tabs -->
+      <nav class="tabs-nav">
+        <button class="tab-btn active" data-tab="overview">✨ 当前人设配方拆解</button>
+        <button class="tab-btn" data-tab="matrix">🧭 地貌 × 载具 × 地形矩阵</button>
+        <button class="tab-btn" data-tab="styles">🏛️ 37 座程序化 3D 建筑图鉴</button>
+        <button class="tab-btn" data-tab="schema">⚡ 一键生成 Starter JSON</button>
+      </nav>
+
+      <!-- Tab 1: Persona Overview -->
+      <section class="tab-panel active" id="panel-overview">
+        <div class="spotlight-grid">
+          <div class="glass-box">
+            <div class="section-title">
+              <span id="spotTitle">🤖 AI 产品 Builder · 蔚蓝群岛</span>
+              <button class="btn-secondary" id="btnCopyActivePreset" style="padding: 6px 12px; font-size: 12px;">
+                📋 复制此预设完整 JSON
+              </button>
+            </div>
+            <div class="recipe-chips" id="spotRecipeChips"></div>
+            <h3 style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+              🏛️ 主岛建筑排布（教育 + 家乡地标 + 职业履历楼）
+            </h3>
+            <div class="places-timeline" id="spotPlacesList"></div>
+          </div>
+
+          <div class="glass-box">
+            <div class="section-title">
+              <span>🚀 第二秘境展台作品（点击载具直达）</span>
+            </div>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px;" id="spotRealmDesc"></p>
+            <div class="project-card-list" id="spotProjectsList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 2: 4 Biome x 5 Carrier Matrix -->
+      <section class="tab-panel" id="panel-matrix">
+        <div class="matrix-layout">
+          <div class="glass-box">
+            <div class="section-title">1. 选择第一世界生态地貌（Biome）</div>
+            <div class="selector-grid" id="biomeGrid"></div>
+
+            <div class="section-title" style="margin-top: 8px;">2. 选择第二秘境载具（Carrier）</div>
+            <div class="selector-grid" id="carrierGrid"></div>
+          </div>
+
+          <div class="glass-box">
+            <div class="section-title">3. 实时双界配色与转场戏剧预览</div>
+            <div class="preview-stage" id="matrixStage"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 3: 37 Building Styles Gallery -->
+      <section class="tab-panel" id="panel-styles">
+        <div class="glass-box">
+          <div class="filter-bar">
+            <div class="filter-pills" id="styleCategoryPills">
+              <button class="filter-pill active" data-cat="all">全部建筑 (37)</button>
+              <button class="filter-pill" data-cat="education">🎓 教育名校 (10)</button>
+              <button class="filter-pill" data-cat="landmark">🏮 家乡与精神地标 (10)</button>
+              <button class="filter-pill" data-cat="career">🏢 行业与名企总部 (17)</button>
+            </div>
+            <input
+              type="search"
+              id="styleSearchInput"
+              class="search-input"
+              placeholder="搜索 style id 或建筑名称（如 b612、园区、哥特）..."
+            />
+          </div>
+          <div class="styles-grid" id="stylesGalleryGrid"></div>
+        </div>
+      </section>
+
+      <!-- Tab 4: Interactive Starter JSON Generator -->
+      <section class="tab-panel" id="panel-schema">
+        <div class="json-workbench">
+          <div class="glass-box">
+            <div class="section-title">🛠️ 30 秒生成你的专属 ProfileConfig</div>
+            <div class="form-group">
+              <label for="inpName">主理人名称（name）</label>
+              <input id="inpName" class="form-control" type="text" value="Alex Chen · Creative Builder" />
+            </div>
+            <div class="form-group">
+              <label for="inpTagline">一句话定位（tagline）</label>
+              <input
+                id="inpTagline"
+                class="form-control"
+                type="text"
+                value="全栈创造者 × 空间交互设计师 · 点击建筑看履历，乘载具前往第二秘境看作品"
+              />
+            </div>
+            <div class="form-group">
+              <label for="selBiome">第一世界地貌（biome）</label>
+              <select id="selBiome" class="form-control">
+                <option value="ocean">🌊 ocean · 蔚蓝海岛</option>
+                <option value="desert">🏜️ desert · 大漠红岩绿洲</option>
+                <option value="snow">❄️ snow · 极光雪山冰谷</option>
+                <option value="grassland">🌿 grassland · 翡翠草原星丘</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="selCarrier">第二秘境载具（carrier）</label>
+              <select id="selCarrier" class="form-control">
+                <option value="submarine">🤿 submarine · 潜艇入海 → 深海秘境</option>
+                <option value="camel">🐪 camel · 骆驼远行 → 沙漠绿洲</option>
+                <option value="snowball">⛄ snowball · 雪人滑雪 → 极光冰谷</option>
+                <option value="rocket">🚀 rocket · 火箭点火 → 近地轨道</option>
+                <option value="balloon">🎈 balloon · 热气球升空 → 云端浮岛</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="selShape">主岛几何地形（worldShape）</label>
+              <select id="selShape" class="form-control">
+                <option value="archipelago">archipelago · 星罗三岛群礁（跨海木桥）</option>
+                <option value="b612-highland">b612-highland · B-612 悬浮星丘</option>
+                <option value="canyon-mesa">canyon-mesa · 双生红岩大峡谷（悬索吊桥）</option>
+                <option value="alpine-valley">alpine-valley · 极光U型冰川湾</option>
+                <option value="crescent-bay">crescent-bay · 新月灯塔环礁湾</option>
+                <option value="floating-terraces">floating-terraces · 纪念碑谷天空阶梯方舟</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="selCount">主岛公司建筑数量（companyCount: 1~6）</label>
+              <select id="selCount" class="form-control">
+                <option value="3">3 栋公司楼（精简创客岛）</option>
+                <option value="4" selected>4 栋公司楼（黄金平衡排布）</option>
+                <option value="5">5 栋公司楼（完整职业编年史）</option>
+                <option value="6">6 栋公司楼（满载环岛天际线）</option>
+              </select>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" id="btnCopyStarterJson">📋 一键复制 Starter JSON</button>
+              <button class="btn-secondary" id="btnLoadFromPreset">🔄 载入当前选中人设</button>
+            </div>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 12px;">
+              💡 复制后，关闭此弹窗并在左上角开启「🛠️ 定制这个世界」抽屉，粘贴到底部 JSON 框点「应用 JSON」即可实时重建 3D 岛屿！
+            </p>
+          </div>
+
+          <div class="glass-box">
+            <div class="section-title">
+              <span>📄 实时生成的 ProfileConfig JSON</span>
+              <span style="font-size: 11.5px; color: #34d399; font-weight: 600;">✓ Schema 校验 100% 通过</span>
+            </div>
+            <pre class="code-view" id="jsonPreviewCode"></pre>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast" id="toastMsg">✅ 已复制到剪贴板！可粘贴至「定制这个世界」JSON 编辑器</div>
+
+    <script>
+      const PRESETS = {
+        "ai-builder": {
+          id: "ai-builder",
+          label: "🤖 AI 产品 Builder · 蔚蓝群岛",
+          badge: "海岛 × 潜艇入海",
+          desc: "三岛跨海木桥 + 潜艇下潜深海全息展厅，适合 AI PM、全栈工程师与 Agent 创作者",
+          biome: "ocean",
+           biomeLabel: "🌊 海岛 (ocean)",
+          carrier: "submarine",
+          carrierLabel: "🤿 潜艇入海 (submarine)",
+          worldShape: "archipelago",
+          shapeLabel: "🏝️ 星罗三岛群礁 (archipelago)",
+          timeOfDay: "☀️ 正午晴空 (day)",
+          weather: "🌤 晴空微风 (clear)",
+          decor: "玻璃罩玫瑰 · 小王子狐狸长椅 · 荷兰风车 · 奔跑小柯基",
+          realmNote: "点击海湾潜艇触发下潜动画，穿越发光水母群抵达深海遗迹，展示 3 座核心 AI 产品展台：",
+          places: [
+            { kind: "education", name: "Alma Mater University · 理工与计算学院", style: "university", role: "计算机科学 & 工业系统工程学士 (2016–2020)" },
+            { kind: "landmark", name: "Harbor Clocktower · 滨海灯塔街区", style: "coastal-town", role: "出发坐标与海洋文化印记" },
+            { kind: "career", name: "1 · Smart Robotics Lab", style: "factory", role: "数字孪生与产线算法工程师" },
+            { kind: "career", name: "2 · HyperScale AI Tower", style: "tower", role: "AI 平台产品经理" },
+            { kind: "career", name: "3 · XR Spatial Lab", style: "tech", role: "3D 创作工具链与 WebXR 负责人" },
+            { kind: "career", name: "4 · Agentic Open Studio", style: "indie-lab", role: "AI Native 创始人 & 独立产品 Builder" }
+          ],
+          projects: [
+            { name: "3D Island Studio · 千人千世界生成器", booth: "booth-holo", tag: "Open Source · 参数化 3D 引擎", summary: "输入一份 JSON 履历，自由混搭 4 大生态地貌、6 种世界地形、5 大第二秘境载具与 37 座程序化 3D 建筑。" },
+            { name: "Agentic Course Factory · 视觉微课流水线", booth: "booth-crystal", tag: "Multi-Agent · 自动质检门", summary: "从结构化教案、双语配音、SVG 动效到逐屏视觉品味门（Taste Harness）的一体化智能内容生产流水线。" },
+            { name: "WebGL Relight Cards · 实时光影万物卡", booth: "booth-arcade", tag: "Creative Tech · Shader", summary: "将平面插画自动提取法线贴图与粗糙度通道，在浏览器内实现指尖跟随的丝滑 PBR 实时重打光交互卡牌。" }
+          ]
+        },
+        "creative-designer": {
+          id: "creative-designer",
+          label: "🎨 创意技术设计师 · 大漠日落绿洲",
+          badge: "沙漠 × 骆驼绿洲",
+          desc: "红岩大峡谷第44次日落 + 流萤星火 + 骆驼远行绿洲，适合 Design Engineer 与视觉导演",
+          biome: "desert",
+          biomeLabel: "🏜️ 沙漠 (desert)",
+          carrier: "camel",
+          carrierLabel: "🐪 骆驼绿洲 (camel)",
+          worldShape: "canyon-mesa",
+          shapeLabel: "⛰️ 双生红岩大峡谷 (canyon-mesa)",
+          timeOfDay: "🌇 第44次日落 (sunset)",
+          weather: "✨ 流萤星火 (fireflies)",
+          decor: "玻璃罩玫瑰 · 露营篝火帐篷 · 小王子狐狸长椅",
+          realmNote: "点击峡谷驼队开启大漠远行，在波斯风情月牙绿洲的星空灯毯间展示 3 件交互艺术代表作：",
+          places: [
+            { kind: "education", name: "Bauhaus School of Design · 包豪斯数字美院", style: "uni-art-bauhaus", role: "数字媒体艺术 & 交互设计硕士 MFA (2017–2021)" },
+            { kind: "landmark", name: "Asteroid B-612 Hill · 玫瑰星丘精神原乡", style: "b612-rose-hill", role: "小王子玻璃罩玫瑰与第 44 次日落" },
+            { kind: "career", name: "1 · Sunlight Design Studio", style: "studio", role: "交互设计师 & 动效原型师" },
+            { kind: "career", name: "2 · Neon Pixel Arcade", style: "game-arcade", role: "主视觉美术 & 关卡体验设计" },
+            { kind: "career", name: "3 · Lumière Virtual Stage", style: "film-stage", role: "实时渲染与 XR 虚拟制片指导" },
+            { kind: "career", name: "4 · Roastery & Lifestyle Lab", style: "coffee-roastery", role: "Design Engineer / 独立创意总监" }
+          ],
+          projects: [
+            { name: "Patina Relight · 鎏金浮雕光影塔罗卡", booth: "booth-arcade", tag: "WebGL Shader · 实时法线打光", summary: "用本地深度神经网络从单张东方神话插画反推法线、高度与鎏金金属度贴图，实现「光随指走」的丝绒光泽。" },
+            { name: "Kinetic Story Deck · 电影级网页解说引擎", booth: "booth-holo", tag: "Motion Design · 60fps 叙事", summary: "将旁白时间轴、3D 镜头推拉与弹簧微交互深度咬合，打造像看动画电影一样丝滑的网页互动演示。" },
+            { name: "Design Taste Harness · 视觉品味自动质检门", booth: "booth-crystal", tag: "Design Engineering · 审美度量", summary: "将布局平衡、模块同构、留白呼吸感与中文排版断行沉淀为可执行的自动化视觉质检守卫。" }
+          ]
+        },
+        "indie-founder": {
+          id: "indie-founder",
+          label: "❄️ 独立黑客 / 全球出海创客 · 极光雪湾",
+          badge: "雪山 × 滑雪极光",
+          desc: "U型冰川雪湾星空夜景 + 漫天飘雪 + 雪人滑雪极光秘境，适合 Indie Hacker 与开源作者",
+          biome: "snow",
+          biomeLabel: "❄️ 雪山 (snow)",
+          carrier: "snowball",
+          carrierLabel: "⛄ 滑雪极光 (snowball)",
+          worldShape: "alpine-valley",
+          shapeLabel: "🏔️ 极光U型冰川湾 (alpine-valley)",
+          timeOfDay: "🌙 星空夜景 (night)",
+          weather: "❄️ 飘雪微尘 (snowfall)",
+          decor: "露营篝火帐篷 · 奔跑小柯基 · 荷兰大风车",
+          realmNote: "点击雪人滑下U型冰川，在漫天绿紫极光帷幕下的冰晶展台检阅 3 款高口碑开源与出海产品：",
+          places: [
+            { kind: "education", name: "Nordic Gothic College · 哥特双塔理工学院", style: "uni-gothic", role: "计算机系统与密码学学士 (2015–2019)" },
+            { kind: "landmark", name: "Aurora Snow Chalet · 林海雪乡暖炉木屋", style: "snow-chalet-village", role: "数字游民大本营与篝火滑雪驿站" },
+            { kind: "career", name: "1 · Global Edge Cloud", style: "cloud-logistics", role: "核心基础架构工程师" },
+            { kind: "career", name: "2 · FinTech Pillar Vault", style: "law-palace", role: "出海支付与订阅增长负责人" },
+            { kind: "career", name: "3 · Pinecone Indie Lab", style: "indie-lab", role: "全职独立开发者 & 开源维护者 ($480k ARR)" }
+          ],
+          projects: [
+            { name: "Chronicle CLI · 本地优先会话时光机", booth: "booth-monolith", tag: "Open Source · 18.4k Stars", summary: "零云端依赖的终端与 AI 编程会话加密归档、全文秒级检索与跨设备增量同步工具。" },
+            { name: "PulseMetric · 隐私友好的轻量级全球分析台", booth: "booth-holo", tag: "Micro-SaaS · $40k MRR", summary: "仅 1.2KB 脚本体积、无需 Cookie 弹窗的实时全球访客三维地球仪与漏斗归因看板。" },
+            { name: "JSON-to-Island · 一键生成 3D 创客名片", booth: "booth-crystal", tag: "Creator Tool · 零门槛定制", summary: "把冷冰冰的 Markdown / PDF 简历变成一座会呼吸的极光雪湾，支持 Base64 URL 免后端一键分享。" }
+          ]
+        },
+        "research-scholar": {
+          id: "research-scholar",
+          label: "🚀 前沿具身智能学者 · 翡翠星轨台",
+          badge: "草原 × 火箭升空",
+          desc: "纪念碑谷天空阶梯方舟 + 漫天落樱 + 火箭点火近地轨道，适合 AI 科学家与交叉学科研究者",
+          biome: "grassland",
+          biomeLabel: "🌿 草原 (grassland)",
+          carrier: "rocket",
+          carrierLabel: "🚀 火箭升空 (rocket)",
+          worldShape: "floating-terraces",
+          shapeLabel: "🏛️ 天空阶梯方舟 (floating-terraces)",
+          timeOfDay: "🌇 第44次日落 (sunset)",
+          weather: "🌸 漫天落樱 (sakura)",
+          decor: "浪漫樱花林 · 玻璃罩玫瑰 · 小王子狐狸长椅",
+          realmNote: "点击发射台火箭点火升空，突破大气层进入近地星轨空间站，交互体验 3 项开源科学基准：",
+          places: [
+            { kind: "education", name: "Astro & Cybernetics Institute · 天文台穹顶研究院", style: "uni-observatory", role: "计算神经科学与机器人学博士 Ph.D. (2016–2021)" },
+            { kind: "landmark", name: "Jiangnan Watertown · 江南白墙黛瓦水乡", style: "watertown", role: "小桥流水乌篷船与少年博物志" },
+            { kind: "career", name: "1 · Helix Bio-Computation Lab", style: "biotech", role: "蛋白质生成与科学大模型博士后研究员" },
+            { kind: "career", name: "2 · Humanoid Robotics Foundry", style: "factory", role: "端到端视觉-语言-动作 (VLA) 算法负责人" },
+            { kind: "career", name: "3 · Spatial World Model Center", style: "tech", role: "首席研究科学家 (Principal Scientist)" },
+            { kind: "career", name: "4 · DeepSpace Frontier Lab", style: "indie-lab", role: "青年学术 PI & 开源具身社区发起人" }
+          ],
+          projects: [
+            { name: "OmniManip-Bench · 具身灵巧操作开源基准", booth: "booth-mech", tag: "Science Robotics · 开源仿真套件", summary: "涵盖 120 种非刚性物体、流体倾倒与双臂协同组装任务的 GPU 高并发物理仿真环境与评测榜单。" },
+            { name: "EquiFold-3D · 几何等变分子动力学引擎", booth: "booth-crystal", tag: "AI4Science · NeurIPS Oral", summary: "在浏览器 WebGPU 与云端算力集群上实时可视化蛋白质构象演化与配体结合自由能地貌。" },
+            { name: "Scholar Island · 告别枯燥学术主页的 3D 实验室", booth: "booth-monolith", tag: "Academic Showcase · 论文可视化", summary: "把实验室主页、求学轨迹与代表性论文展台搬进纪念碑谷阶梯方舟，乘火箭升入近地轨道沉浸阅读。" }
+          ]
+        }
+      };
+
+      const BIOMES = [
+        { id: "ocean", name: "🌊 海岛 (ocean)", desc: "阳光环礁、白沙滩、椰林与清澈浅海", ground: "#8CC869", water: "#58B9C7", sky: "#D8EEF5" },
+        { id: "desert", name: "🏜️ 沙漠 (desert)", desc: "暖金红岩沙丘、仙人掌与月牙绿洲池", ground: "#E3B06B", water: "#48B5A3", sky: "#FAD6A5" },
+        { id: "snow", name: "❄️ 雪山 (snow)", desc: "奶油厚雪松林、冰封镜湖与冷冽冰川", ground: "#EEF4F8", water: "#6B9AC4", sky: "#CFE2F3" },
+        { id: "grassland", name: "🌿 草原 (grassland)", desc: "翡翠苔原阶梯、旷野花海与蜿蜒溪流", ground: "#78BF65", water: "#5AB5C2", sky: "#DCF0EC" }
+      ];
+
+      const CARRIERS = [
+        { id: "submarine", name: "🤿 潜艇入海", realm: "深海遗迹秘境", desc: "黄色潜艇下潜海底，发光珊瑚与全息深海舱环绕", sky: "#072235", stage: "#0E3854" },
+        { id: "camel", name: "🐪 骆驼远行", realm: "星夜大漠绿洲", desc: "驼队穿越沙丘抵达波斯帐篷、篝火与清泉绿洲", sky: "#2B1810", stage: "#8C5230" },
+        { id: "snowball", name: "⛄ 雪人滑雪", realm: "山脚极光冰谷", desc: "雪人疾驰而下，仰望漫天舞动的绿紫极光帷幕", sky: "#0A192F", stage: "#1E3A5F" },
+        { id: "rocket", name: "🚀 火箭点火", realm: "近地星轨空间站", desc: "尾部烈焰升空进入失重星海，行星环与卫星伴飞", sky: "#050714", stage: "#1A1E36" },
+        { id: "balloon", name: "🎈 热气球升空", realm: "云端天空浮岛", desc: "彩色热气球缓缓升入玫瑰金晚霞云海与浮空神庙", sky: "#FDE2E4", stage: "#E2ECE9" }
+      ];
+
+      const BUILDING_STYLES = [
+        // Education (10)
+        { id: "university", cat: "education", name: "古典红砖穹顶大学", hint: "三拱古典校门 · 飘扬校旗", colors: ["#A9472F", "#7C9885", "#F3EDE0"] },
+        { id: "uni-gothic", cat: "education", name: "哥特双塔钟楼学院", hint: "机械走针钟盘 · 彩绘花窗", colors: ["#DED6C6", "#2E3A46", "#4C7BD9"] },
+        { id: "uni-modern", cat: "education", name: "现代几何玻璃理工院", hint: "悬挑玻璃盒子 · 追日光伏板", colors: ["#F2F4F7", "#222831", "#3898EC"] },
+        { id: "uni-academy", cat: "education", name: "东方书院天井四合院", hint: "飞檐四合天井 · 翠竹书卷", colors: ["#F5F0E6", "#3A423C", "#5E9E6E"] },
+        { id: "uni-observatory", cat: "education", name: "天文台穹顶研究院", hint: "银白开合天球穹顶 · 射电望远镜", colors: ["#E2E8F0", "#1E3A8A", "#F59E0B"] },
+        { id: "uni-art-bauhaus", cat: "education", name: "包豪斯艺术设计美院", hint: "红黄蓝几何网格幕墙 · 雕塑庭院", colors: ["#FAF8F5", "#E11D48", "#2563EB"] },
+        { id: "uni-gate-palace", cat: "education", name: "中式红墙飞檐名校", hint: "汉白玉三门牌坊 · 琉璃歇山大礼堂", colors: ["#9B2C2C", "#D69E2E", "#F7FAFC"] },
+        { id: "uni-conservatory", cat: "education", name: "古典交响音乐学院", hint: "旋转黄金竖琴雕塑 · 声学管风琴厅", colors: ["#FFFBEB", "#D97706", "#4F46E5"] },
+        { id: "ruc-mingde", cat: "education", name: "东方红砖人文学府", hint: "古典红砖主楼 · 博学笃行校训石与银杏林", colors: ["#8E1B2B", "#D9CFC1", "#EAB308"] },
+        { id: "unimelb-clocktower", cat: "education", name: "维多利亚砂岩钟楼大学", hint: "维多利亚砂岩钟塔 · 蓝花楹与尖拱回廊", colors: ["#D9B382", "#094183", "#A855F7"] },
+        // Landmark (10)
+        { id: "pagoda", cat: "landmark", name: "东方五层飞檐古塔", hint: "五层重檐攒尖 · 暖光红灯笼", colors: ["#C84B31", "#3A3F36", "#FFAB2E"] },
+        { id: "watertown", cat: "landmark", name: "江南白墙黛瓦水乡", hint: "马头墙石拱桥 · 摇橹乌篷船", colors: ["#F9F8F3", "#2D3339", "#52B2BF"] },
+        { id: "coastal-town", cat: "landmark", name: "地中海红瓦钟楼街区", hint: "暖白拱廊街区 · 旋转航标灯塔", colors: ["#FAF3E6", "#D96B43", "#38BDF8"] },
+        { id: "metro-landmark", cat: "landmark", name: "现代大都市双球电视塔", hint: "双球观景云塔 · 摩天连廊", colors: ["#E2E8F0", "#1E293B", "#F43F5E"] },
+        { id: "b612-rose-hill", cat: "landmark", name: "B-612 玫瑰玻璃罩山丘", hint: "玻璃罩红玫瑰 · 苔藓奇石星环", colors: ["#7BC47F", "#38BDF8", "#F43F5E"] },
+        { id: "siheyuan-courtyard", cat: "landmark", name: "老北京朱门四合院", hint: "朱红大门灰瓦正房 · 庭院石榴红灯", colors: ["#B91C1C", "#4B5563", "#F59E0B"] },
+        { id: "mountain-stilts", cat: "landmark", name: "山城吊脚楼洪崖阁", hint: "依山悬挑木柱群 · 千与千寻暖光灯笼", colors: ["#78350F", "#F59E0B", "#FEF3C7"] },
+        { id: "euro-castle", cat: "landmark", name: "欧式童话尖顶古堡", hint: "蓝顶三塔石砌城堡 · 飘扬皇家旗帜", colors: ["#F1F5F9", "#1D4ED8", "#F43F5E"] },
+        { id: "tulou-roundhouse", cat: "landmark", name: "闽南客家圆形土楼", hint: "夯土环形大围屋 · 环形红灯笼内院", colors: ["#D6A874", "#374151", "#EF4444"] },
+        { id: "snow-chalet-village", cat: "landmark", name: "北国林海雪乡木屋", hint: "奶油厚雪斜顶木屋 · 暖炉炊烟", colors: ["#F8FAFC", "#92400E", "#F97316"] },
+        // Career (17)
+        { id: "tower", cat: "career", name: "AI / 社交赛博霓虹高塔", hint: "曜石黑摩天楼 · 动态瀑布流巨幕", colors: ["#15161A", "#25F4EE", "#FE2C55"] },
+        { id: "tech", cat: "career", name: "XR 空间计算研发中心", hint: "屋顶巨型头显 · 全息城市沙盘", colors: ["#F7F9FC", "#1E66F5", "#00E5FF"] },
+        { id: "factory", cat: "career", name: "智能制造超级工厂", hint: "锯齿天窗厂房 · 库卡橙机械臂", colors: ["#DFE2E5", "#2B3036", "#FF6A13"] },
+        { id: "studio", cat: "career", name: "创意设计玻璃工坊", hint: "珊瑚粉阳光房 · 圆桌气泡对话", colors: ["#FAF6F0", "#FF67A8", "#38BDF8"] },
+        { id: "biotech", cat: "career", name: "翡翠阶梯生科医药总部", hint: "生态阶梯露台 · 旋转 DNA 双螺旋", colors: ["#ECFDF5", "#059669", "#34D399"] },
+        { id: "game-arcade", cat: "career", name: "潮玩像素游戏工坊", hint: "霓虹紫潮玩楼 · 悬浮游戏手柄", colors: ["#2E1065", "#7C3AED", "#F43F5E"] },
+        { id: "cloud-logistics", cat: "career", name: "电商与云原生智能园区", hint: "环形空中跑道 · 物流无人机起降", colors: ["#F8FAFC", "#0284C7", "#FF6A00"] },
+        { id: "indie-lab", cat: "career", name: "开源极客原木创客空间", hint: "暖木极客工坊 · 旋转深空天线", colors: ["#D9A066", "#334155", "#38BDF8"] },
+        { id: "medical-center", cat: "career", name: "现代医疗健康中心", hint: "洁白弧形病房大楼 · 屋顶救援停机坪", colors: ["#F8FAFC", "#EF4444", "#0EA5E9"] },
+        { id: "law-palace", cat: "career", name: "律所与金融罗马柱大厦", hint: "古典大理石列柱 · 屋顶旋转金色天平", colors: ["#F5EFE6", "#D97706", "#1E293B"] },
+        { id: "film-stage", cat: "career", name: "影视传媒与MCN摄影棚", hint: "开合黑白场记板 · 摇臂摄像机与聚光灯", colors: ["#1E293B", "#FACC15", "#F43F5E"] },
+        { id: "coffee-roastery", cat: "career", name: "新消费精品咖啡旗舰店", hint: "屋顶冒热气咖啡杯 · 条纹遮阳棚外摆区", colors: ["#78350F", "#FDE68A", "#15803D"] },
+        { id: "xiaomi-park", cat: "career", name: "双子连廊科技园总部", hint: "双子玻璃幕墙 · 屋顶活力橙顶标与慢跑环道", colors: ["#FF6900", "#E2E8F0", "#1E293B"] },
+        { id: "jd-hq", cat: "career", name: "三联高空连廊旗舰总部", hint: "三塔高空连廊巨舰 · 银白金属萌宠雕塑", colors: ["#E1251B", "#F1F5F9", "#334155"] },
+        { id: "bytedance-hq", cat: "career", name: "错层悬挑数智科技广场", hint: "错层悬挑玻璃幕墙 · 蓝青四竖条动态律动光柱", colors: ["#325AB4", "#00C8D2", "#F8FAFC"] },
+        { id: "taikang-tower", cat: "career", name: "CBD 斜交网格金融高塔", hint: "香槟金斜交网格摩天楼 · 翡翠菱形顶标", colors: ["#EA5504", "#D4AF37", "#1E293B"] },
+        { id: "cscec-tower", cat: "career", name: "外框钢构蓝立方大厦", hint: "深宝石蓝外框X钢构大厦 · 三维蓝立方顶标", colors: ["#005BAC", "#CBD5E1", "#F59E0B"] }
+      ];
+
+      const params = new URLSearchParams(window.location.search);
+      let activeTemplateId = params.get("template") || "ai-builder";
+      if (!PRESETS[activeTemplateId]) activeTemplateId = "ai-builder";
+
+      let activeTabId = params.get("tab") || "overview";
+      let selectedBiomeId = PRESETS[activeTemplateId].biome;
+      let selectedCarrierId = PRESETS[activeTemplateId].carrier;
+      let selectedStyleCat = "all";
+
+      function showToast(text) {
+        const el = document.getElementById("toastMsg");
+        el.textContent = text;
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 2600);
+      }
+
+      function renderPersonaBar() {
+        const bar = document.getElementById("personaBar");
+        bar.innerHTML = Object.values(PRESETS)
+          .map(
+            (p) => `
+          <button class="persona-card ${p.id === activeTemplateId ? "active" : ""}" data-preset="${p.id}">
+            <span class="persona-badge">${p.badge}</span>
+            <div class="persona-title">${p.label}</div>
+            <div class="persona-desc">${p.desc}</div>
+          </button>
+        `
+          )
+          .join("");
+
+        bar.querySelectorAll(".persona-card").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            activeTemplateId = btn.getAttribute("data-preset");
+            selectedBiomeId = PRESETS[activeTemplateId].biome;
+            selectedCarrierId = PRESETS[activeTemplateId].carrier;
+            renderPersonaBar();
+            renderOverview();
+            renderMatrix();
+            syncFormWithPreset();
+          });
+        });
+      }
+
+      function renderOverview() {
+        const p = PRESETS[activeTemplateId];
+        document.getElementById("spotTitle").textContent = p.label;
+        document.getElementById("spotRecipeChips").innerHTML = `
+          <div class="recipe-chip"><span class="k">第一世界地貌</span><span class="v">${p.biomeLabel}</span></div>
+          <div class="recipe-chip"><span class="k">第二秘境载具</span><span class="v">${p.carrierLabel}</span></div>
+          <div class="recipe-chip"><span class="k">几何世界地形</span><span class="v">${p.shapeLabel}</span></div>
+          <div class="recipe-chip"><span class="k">天光昼夜时刻</span><span class="v">${p.timeOfDay}</span></div>
+          <div class="recipe-chip"><span class="k">动态气候粒子</span><span class="v">${p.weather}</span></div>
+          <div class="recipe-chip"><span class="k">岛屿氛围摆件</span><span class="v">${p.decor}</span></div>
+        `;
+
+        const kindMap = {
+          education: { label: "求学", cls: "kind-education" },
+          landmark: { label: "地标", cls: "kind-landmark" },
+          career: { label: "履历", cls: "kind-career" }
+        };
+
+        document.getElementById("spotPlacesList").innerHTML = p.places
+          .map((pl) => {
+            const k = kindMap[pl.kind];
+            return `
+            <div class="place-row">
+              <div class="place-row-left">
+                <span class="kind-tag ${k.cls}">${k.label}</span>
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 700;">${pl.name}</div>
+                  <div style="font-size: 11.5px; color: var(--text-muted);">${pl.role}</div>
+                </div>
+              </div>
+              <span class="style-pill">style: "${pl.style}"</span>
+            </div>
+          `;
+          })
+          .join("");
+
+        document.getElementById("spotRealmDesc").textContent = p.realmNote;
+        document.getElementById("spotProjectsList").innerHTML = p.projects
+          .map(
+            (pr) => `
+          <div class="project-item">
+            <div class="project-item-head">
+              <h4>${pr.name}</h4>
+              <span class="booth-badge">${pr.booth}</span>
+            </div>
+            <div style="font-size: 11px; color: #38bdf8; margin-bottom: 5px; font-weight: 600;">${pr.tag}</div>
+            <p>${pr.summary}</p>
+          </div>
+        `
+          )
+          .join("");
+      }
+
+      function renderMatrix() {
+        const bGrid = document.getElementById("biomeGrid");
+        bGrid.innerHTML = BIOMES.map(
+          (b) => `
+          <button class="opt-card ${b.id === selectedBiomeId ? "selected" : ""}" data-biome="${b.id}">
+            <strong>${b.name}</strong>
+            <span>${b.desc}</span>
+          </button>
+        `
+        ).join("");
+
+        bGrid.querySelectorAll(".opt-card").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            selectedBiomeId = btn.getAttribute("data-biome");
+            renderMatrix();
+          });
+        });
+
+        const cGrid = document.getElementById("carrierGrid");
+        cGrid.innerHTML = CARRIERS.map(
+          (c) => `
+          <button class="opt-card ${c.id === selectedCarrierId ? "selected" : ""}" data-carrier="${c.id}">
+            <strong>${c.name}</strong>
+            <span>→ ${c.realm}</span>
+          </button>
+        `
+        ).join("");
+
+        cGrid.querySelectorAll(".opt-card").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            selectedCarrierId = btn.getAttribute("data-carrier");
+            renderMatrix();
+          });
+        });
+
+        const bObj = BIOMES.find((b) => b.id === selectedBiomeId) || BIOMES[0];
+        const cObj = CARRIERS.find((c) => c.id === selectedCarrierId) || CARRIERS[0];
+        const stage = document.getElementById("matrixStage");
+        stage.style.background = `linear-gradient(135deg, ${cObj.sky} 0%, ${cObj.stage} 100%)`;
+        stage.innerHTML = `
+          <div>
+            <div class="eyebrow" style="background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.25);">
+              当前组合：${bObj.id} × ${cObj.id}
+            </div>
+            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">
+              第一世界「${bObj.name.split(" ")[1]}」 ➔ 第二秘境「${cObj.realm}」
+            </h3>
+            <p style="font-size: 13.5px; color: rgba(255,255,255,0.82); margin-bottom: 14px;">
+              ${bObj.desc}；当访客点击岛边的 <strong>${cObj.name}</strong>，镜头将执行 2.2 秒电影级推拉转场：${cObj.desc}。
+            </p>
+          </div>
+          <div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 600;">🎨 引擎自动解析的 ThemePalette 色板：</div>
+            <div class="swatch-row">
+              <span class="swatch-chip"><i class="swatch-dot" style="background:${bObj.ground}"></i>主岛地表 ${bObj.ground}</span>
+              <span class="swatch-chip"><i class="swatch-dot" style="background:${bObj.water}"></i>主岛水域 ${bObj.water}</span>
+              <span class="swatch-chip"><i class="swatch-dot" style="background:${bObj.sky}"></i>主岛天光 ${bObj.sky}</span>
+              <span class="swatch-chip"><i class="swatch-dot" style="background:${cObj.sky}"></i>秘境天幕 ${cObj.sky}</span>
+              <span class="swatch-chip"><i class="swatch-dot" style="background:${cObj.stage}"></i>秘境展台 ${cObj.stage}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderStylesGallery() {
+        const q = (document.getElementById("styleSearchInput").value || "").trim().toLowerCase();
+        const filtered = BUILDING_STYLES.filter((s) => {
+          const matchCat = selectedStyleCat === "all" || s.cat === selectedStyleCat;
+          const matchQuery =
+            !q ||
+            s.id.toLowerCase().includes(q) ||
+            s.name.toLowerCase().includes(q) ||
+            s.hint.toLowerCase().includes(q);
+          return matchCat && matchQuery;
+        });
+
+        const catBadge = {
+          education: { text: "education", cls: "kind-education" },
+          landmark: { text: "landmark", cls: "kind-landmark" },
+          career: { text: "career", cls: "kind-career" }
+        };
+
+        document.getElementById("stylesGalleryGrid").innerHTML = filtered
+          .map((s) => {
+            const cb = catBadge[s.cat];
+            return `
+            <div class="style-card">
+              <div>
+                <div class="style-card-top">
+                  <span class="kind-tag ${cb.cls}">${cb.text}</span>
+                  <div class="color-tri">
+                    <span style="background:${s.colors[0]}"></span>
+                    <span style="background:${s.colors[1]}"></span>
+                    <span style="background:${s.colors[2]}"></span>
+                  </div>
+                </div>
+                <h4>${s.name}</h4>
+                <p>${s.hint}</p>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-top: 4px;">
+                <code class="style-pill">"${s.id}"</code>
+                <button class="filter-pill" style="padding:3px 9px; font-size:11px;" data-copy-style="${s.id}">复制 ID</button>
+              </div>
+            </div>
+          `;
+          })
+          .join("");
+
+        document.querySelectorAll("[data-copy-style]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-copy-style");
+            navigator.clipboard?.writeText(id);
+            showToast(`✅ 已复制建筑样式 ID: "${id}"`);
+          });
+        });
+      }
+
+      function buildStarterJsonObject() {
+        const p = PRESETS[activeTemplateId];
+        const name = document.getElementById("inpName").value.trim() || p.label;
+        const tagline = document.getElementById("inpTagline").value.trim() || p.desc;
+        const biome = document.getElementById("selBiome").value;
+        const carrier = document.getElementById("selCarrier").value;
+        const worldShape = document.getElementById("selShape").value;
+        const companyCount = parseInt(document.getElementById("selCount").value, 10) || 4;
+
+        return {
+          name,
+          tagline,
+          github: "https://github.com/jasonz-ai/3d-island",
+          linkedin: "https://www.linkedin.com",
+          biome,
+          carrier,
+          worldShape,
+          timeOfDay: biome === "desert" ? "sunset" : biome === "snow" ? "night" : "day",
+          weather: biome === "snow" ? "snowfall" : biome === "grassland" ? "sakura" : "clear",
+          decorProps: ["b612-rose", "fox-bench", "pet-corgi"],
+          companyCount,
+          places: p.places.map((pl, idx) => ({
+            id: pl.kind === "education" ? "university" : pl.kind === "landmark" ? "hometown-pagoda" : `career-${idx - 1}`,
+            name: pl.name,
+            short: pl.name.split("·")[0].trim(),
+            kind: pl.kind,
+            style: pl.style,
+            floors: pl.kind === "career" ? 4 : undefined,
+            roles: [
+              {
+                title: pl.role,
+                period: "2020 – 2026",
+                location: "Global",
+                notes: ["在「定制这个世界」抽屉或 JSON 中可自由修改每一段履历详情与建筑外观样式。"]
+              }
+            ]
+          })),
+          projects: p.projects.map((pr, idx) => ({
+            id: `project-${idx + 1}`,
+            name: pr.name,
+            tag: pr.tag,
+            boothStyle: pr.booth,
+            link: `/demos/generic-showcase/index.html?template=${activeTemplateId}`,
+            repoUrl: "https://github.com/jasonz-ai/3d-island",
+            summary: pr.summary
+          }))
+        };
+      }
+
+      function updateJsonPreview() {
+        const obj = buildStarterJsonObject();
+        document.getElementById("jsonPreviewCode").textContent = JSON.stringify(obj, null, 2);
+      }
+
+      function syncFormWithPreset() {
+        const p = PRESETS[activeTemplateId];
+        document.getElementById("inpName").value = p.label.replace(/^[^\s]+\s/, "");
+        document.getElementById("inpTagline").value = p.desc;
+        document.getElementById("selBiome").value = p.biome;
+        document.getElementById("selCarrier").value = p.carrier;
+        document.getElementById("selShape").value = p.worldShape;
+        updateJsonPreview();
+      }
+
+      function activateTab(tabId) {
+        activeTabId = tabId;
+        document.querySelectorAll(".tab-btn").forEach((b) => {
+          b.classList.toggle("active", b.getAttribute("data-tab") === tabId);
+        });
+        document.querySelectorAll(".tab-panel").forEach((panel) => {
+          panel.classList.toggle("active", panel.id === `panel-${tabId}`);
+        });
+      }
+
+      // Wire events
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => activateTab(btn.getAttribute("data-tab")));
+      });
+
+      document.querySelectorAll("#styleCategoryPills .filter-pill").forEach((pill) => {
+        pill.addEventListener("click", () => {
+          selectedStyleCat = pill.getAttribute("data-cat");
+          document.querySelectorAll("#styleCategoryPills .filter-pill").forEach((el) => {
+            el.classList.toggle("active", el === pill);
+          });
+          renderStylesGallery();
+        });
+      });
+
+      document.getElementById("styleSearchInput").addEventListener("input", renderStylesGallery);
+
+      ["inpName", "inpTagline", "selBiome", "selCarrier", "selShape", "selCount"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", updateJsonPreview);
+        document.getElementById(id).addEventListener("change", updateJsonPreview);
+      });
+
+      document.getElementById("btnLoadFromPreset").addEventListener("click", () => {
+        syncFormWithPreset();
+        showToast("🔄 已同步当前人设模板参数！");
+      });
+
+      document.getElementById("btnCopyStarterJson").addEventListener("click", () => {
+        const json = JSON.stringify(buildStarterJsonObject(), null, 2);
+        navigator.clipboard?.writeText(json);
+        showToast("✅ Starter JSON 已复制！快去「定制这个世界」粘贴体验吧");
+      });
+
+      document.getElementById("btnCopyActivePreset").addEventListener("click", () => {
+        syncFormWithPreset();
+        const json = JSON.stringify(buildStarterJsonObject(), null, 2);
+        navigator.clipboard?.writeText(json);
+        showToast(`✅ 已复制「${PRESETS[activeTemplateId].label}」完整 JSON 配置！`);
+      });
+
+      // Initial render
+      renderPersonaBar();
+      renderOverview();
+      renderMatrix();
+      renderStylesGallery();
+      syncFormWithPreset();
+      if (["overview", "matrix", "styles", "schema"].includes(activeTabId)) {
+        activateTab(activeTabId);
+      }
+    </script>
+  </body>
+</html>

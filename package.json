@@ -1,0 +1,39 @@
+{
+  "name": "3d-island-studio",
+  "version": "1.0.0",
+  "private": false,
+  "description": "3D Island Studio · 千人千世界的 3D 个人主页生成器 — Low-poly Three.js interactive 3D portfolio & resume world builder with Sims-style 3D build mode, 4 biomes, 6 topologies, 5 realm carriers, and 37 procedural 3D buildings.",
+  "keywords": [
+    "threejs",
+    "webgl",
+    "3d-portfolio",
+    "personal-website",
+    "interactive-resume",
+    "low-poly",
+    "isometric-island",
+    "typescript",
+    "vite"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jasonz-ai/3d-island.git"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.170.0",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.0",
+    "vitest": "^2.1.5"
+  }
+}

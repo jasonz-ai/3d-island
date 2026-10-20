@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>3D Island Studio · 千人千世界 3D 个人主页生成器</title>
+    <meta
+      name="description"
+      content="3D Island Studio · 千人千世界的低多边形 3D 交互个人主页开源生成引擎：4 大生态群落 × 6 款地形 × 5 种第二秘境载具 × 37 种 3D 建筑 × 模拟人生 3D 建造模式。"
+    />
+  </head>
+  <body>
+    <canvas id="scene" aria-label="交互式 3D 人生世界。可切换 List view 查看纯文字版。"></canvas>
+    <div id="haze-top" aria-hidden="true"></div>
+    <div id="tilt-shift-lens" aria-hidden="true"></div>
+    <div id="labels"></div>
+    <div id="transition-veil"></div>
+
+    <header class="intro">
+      <p class="eyebrow" id="world-badge">海岛 · 潜艇入海</p>
+      <h1 id="profile-name">Alex Rivera<span class="dot">.</span></h1>
+      <p class="tagline" id="profile-tagline"></p>
+      <div class="intro-template-row">
+        <div class="hero-quick-strip" id="hero-quick-strip" aria-label="预设职业模板切换"></div>
+      </div>
+      <div class="intro-primary-row">
+        <button id="open-customize" class="intro-btn-primary customize-trigger" type="button">🛠 建造模式</button>
+        <button id="guided-tour-btn" class="share-pill" type="button" title="一键开启自动环岛故事导览">环岛导览</button>
+        <button id="open-showcase-btn" class="share-pill hero-quick-chip hero-quick-chip-accent" type="button" title="打开岛内交互式作品展台">✦ 作品展台</button>
+        <button id="open-list" class="share-pill" type="button">完整履历</button>
+        <a id="link-github" class="share-pill" href="https://github.com/jasonz-ai/3d-island" target="_blank" rel="noopener">GitHub ↗</a>
+        <button id="toggle-audio-btn" class="share-pill" type="button" title="开关舒缓背景轻音乐（后台自动随机切换曲目）">🎵 音乐: 开</button>
+        <button id="fullscreen-toggle-btn" class="share-pill" type="button" title="进入全屏纯净 3D 观赏模式（横屏更佳）">⛶ 全屏</button>
+      </div>
+    </header>
+
+    <button id="landscape-fullscreen-fab" class="landscape-fullscreen-fab" type="button" title="切换全屏纯净观看模式">⛶ 全屏观看</button>
+
+    <div id="wechat-browser-guide" class="wechat-browser-guide" role="dialog" aria-label="微信浏览器切换提示" hidden>
+      <div class="wechat-guide-card">
+        <div class="wechat-guide-arrow" aria-hidden="true">↗</div>
+        <div class="wechat-guide-head">
+          <span class="wechat-guide-badge">💡 微信内横屏受限 · 最佳观赏提示</span>
+        </div>
+        <p class="wechat-guide-title">请点击右上角 <strong>「···」</strong> 选择 <strong>「在浏览器打开」</strong></p>
+        <p class="wechat-guide-desc">微信内置浏览器默认锁定竖屏。切换至系统浏览器（Safari / Chrome）或复制链接打开后，即可<strong>旋转手机横屏 + 开启全屏</strong>，体验 16:9 完整 3D 海岛。</p>
+        <div class="wechat-guide-actions">
+          <button id="wechat-copy-url-btn" class="wechat-guide-btn-primary" type="button">📋 一键复制网址</button>
+          <button id="wechat-dismiss-btn" class="wechat-guide-btn-ghost" type="button">先在微信内浏览</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tour-subtitle-bar" class="tour-subtitle-bar" role="region" aria-label="环岛故事导览字幕" hidden></div>
+
+    <button id="visitor-exit-btn" class="visitor-exit-btn" type="button" hidden>🛠 退出访客预览</button>
+    <div id="share-toast" class="share-toast" role="status" aria-live="polite" hidden></div>
+
+    <div id="sims-build-bar" class="sims-build-bar" aria-label="模拟人生 3D 建造模式工具栏" hidden>
+      <div class="sims-build-brand">
+        <span class="sims-plumbob-icon">◆</span>
+        <span>模拟人生 3D 建造态</span>
+      </div>
+      <div id="sims-slot-pills" class="sims-slot-pills"></div>
+      <div class="sims-build-actions">
+        <button id="sims-share-link" type="button" class="sims-btn-secondary">🔗 分享链接</button>
+        <button id="sims-export-postcard" type="button" class="sims-btn-secondary">📸 明信片</button>
+        <button id="sims-open-full-form" type="button" class="sims-btn-secondary">📂 全量表单 / JSON</button>
+        <button id="sims-exit-build" type="button" class="sims-btn-primary">✓ 完成建造</button>
+      </div>
+    </div>
+
+    <aside id="sims-catalog-dock" class="sims-catalog-dock" aria-label="同类建筑视觉图鉴卡片库" hidden>
+      <div class="sims-dock-header">
+        <p class="sims-dock-eyebrow" id="sims-catalog-eyebrow">SIMS BUILD CATALOG · 同类专属建筑库</p>
+        <h2 class="sims-dock-title" id="sims-catalog-title">选择 3D 建筑外观</h2>
+        <p class="sims-dock-sub" id="sims-catalog-subtitle">点击场景中的建筑或下方卡片，即可实时替换 3D 模型（严格按类别过滤，绝不混搭）。</p>
+      </div>
+      <div id="sims-catalog-grid" class="sims-catalog-grid"></div>
+    </aside>
+
+    <nav class="studio-bar collapsed" id="studio-bar" aria-label="世界与转场定制台">
+      <div class="studio-bar-head">
+        <span class="studio-bar-title">✦ 世界控制台</span>
+        <button id="studio-toggle" class="studio-toggle" type="button" aria-label="收起或展开控制台">展开定制 ▾</button>
+      </div>
+      <div class="studio-bar-body" id="studio-bar-body">
+        <div class="studio-group">
+          <span class="studio-label">地貌世界</span>
+          <div class="studio-pills" id="biome-Group"></div>
+        </div>
+        <div class="studio-group">
+          <span class="studio-label">地形版型（6款）</span>
+          <div class="studio-pills" id="world-shape-group"></div>
+        </div>
+        <div class="studio-group">
+          <span class="studio-label">转场载具 / 第二秘境</span>
+          <div class="studio-pills" id="carrier-group"></div>
+        </div>
+        <div class="studio-group">
+          <span class="studio-label">光影时刻</span>
+          <div class="studio-pills" id="time-of-day-group"></div>
+        </div>
+        <div class="studio-group">
+          <span class="studio-label">天气粒子</span>
+          <div class="studio-pills" id="weather-group"></div>
+        </div>
+        <div class="studio-group">
+          <span class="studio-label">公司楼数</span>
+          <div class="studio-pills" id="tower-count-group"></div>
+        </div>
+        <div class="studio-group">
+          <span class="studio-label">分享与导出</span>
+          <div class="studio-pills">
+            <button id="visitor-mode-toggle" class="studio-pill" type="button" title="预览访客视角（隐藏控制台与建造入口）">👁 访客预览</button>
+            <button id="share-link-btn" class="studio-pill" type="button" title="生成包含全部定制配置的 #island= 分享链接">🔗 复制分享链接</button>
+            <button id="export-postcard-btn" class="studio-pill" type="button" title="将当前 3D 岛屿画面导出为拍立得明信片 PNG">📸 生成岛屿明信片</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div id="mobile-landscape-hint" class="mobile-landscape-hint" role="status" aria-live="polite">
+      <span class="mobile-landscape-icon" aria-hidden="true">⟳</span>
+      <span class="mobile-landscape-text" id="mobile-landscape-text">建议<strong>横屏浏览</strong>；如在微信内打开，请点右上角<strong>「···」在浏览器打开</strong>以解锁横屏与全屏</span>
+      <div class="mobile-landscape-actions">
+        <button id="mobile-hint-copy-btn" class="mobile-landscape-action" type="button">复制链接</button>
+        <button id="mobile-hint-fullscreen-btn" class="mobile-landscape-action" type="button">⛶ 全屏</button>
+        <button id="dismiss-landscape-hint" class="mobile-landscape-close" type="button" aria-label="关闭横屏提示">知道了</button>
+      </div>
+    </div>
+
+    <p class="hint" id="scene-hint"></p>
+
+    <aside id="panel" aria-live="polite" hidden>
+      <button class="close" type="button" aria-label="关闭详情">×</button>
+      <div class="panel-body"></div>
+    </aside>
+
+    <aside id="customize-drawer" aria-label="定制我的 3D 岛屿" hidden>
+      <button class="close" type="button" aria-label="关闭定制抽屉">×</button>
+      <div class="customize-body">
+        <p class="kind">Island Studio 2.0 · Live Builder</p>
+        <h2 class="place-name">定制我的 3D 世界</h2>
+        <p class="cust-desc">支持切换 6 款非圆盘 3D 地形版型、为每栋建筑切换 37 种 3D 建筑母型、为每个作品切换 5 种 3D 展台并嵌入产品体验链接与源码地址。</p>
+
+        <div class="cust-field">
+          <label for="cust-name">主页标题 / 名字</label>
+          <input id="cust-name" type="text" maxlength="28" placeholder="例如：Alex Studio" />
+        </div>
+
+        <div class="cust-field">
+          <label for="cust-tagline">一句话定位 / 简介</label>
+          <textarea id="cust-tagline" rows="2" maxlength="100"></textarea>
+        </div>
+
+        <div class="cust-section-head">
+          <div class="cust-section-title">主岛建筑与履历地标（37 种通用 3D 母型可选）</div>
+          <button id="cust-custom-building-btn" type="button" class="btn-mini">✨ 定制专属母校/名企大楼</button>
+        </div>
+        <div id="cust-places-list" class="cust-list"></div>
+
+        <div class="cust-section-head">
+          <div class="cust-section-title">第二秘境 · 作品展台与产品链接（1–6 个）</div>
+          <button id="cust-add-project" type="button" class="btn-mini">+ 新增作品</button>
+        </div>
+        <div id="cust-projects-list" class="cust-list"></div>
+
+        <div class="cust-actions">
+          <button id="cust-apply" type="button" class="btn-primary">应用并刷新 3D 世界</button>
+          <button id="cust-toggle-json" type="button" class="btn-secondary">导入 / 导出 JSON</button>
+          <button id="cust-reset" type="button" class="btn-ghost">恢复默认</button>
+        </div>
+
+        <div id="cust-json-wrap" class="cust-json-wrap" hidden>
+          <label for="cust-json-area">Profile JSON（可直接粘贴自定义 JSON 后点击「从 JSON 导入」）</label>
+          <textarea id="cust-json-area" rows="6" spellcheck="false"></textarea>
+          <div class="cust-json-btns">
+            <button id="cust-import-json" type="button" class="btn-primary">从 JSON 导入</button>
+            <button id="cust-copy-json" type="button" class="btn-secondary">复制 JSON</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <section id="list" hidden>
+      <button class="close" type="button" aria-label="关闭文字简历">×</button>
+      <div class="list-body"></div>
+    </section>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

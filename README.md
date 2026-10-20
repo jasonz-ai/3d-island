@@ -366,7 +366,7 @@ npm run preview
 
 ## 🙏 灵感与致谢
 
-- **最早创意灵感启发**：本项目的最初灵感源自 **[Joshua's World](https://joshuas.world/)** 令人惊艳的 3D 微缩世界个人主页——正是看到「将个人经历放进一座可自由旋转探索的 3D 小岛」这一绝妙创意，启发我们从零编写了这套参数化、人人可自定义生成的开源引擎；
+- **最早创意灵感启发**：本项目的最初灵感源自 **[Marco Zhuang (@Marcozc19)](https://marcozc19.github.io/intro/)** 令人惊艳的 3D 微缩海岛个人主页——正是看到「将个人求学与职业经历放进一座可自由旋转探索的 3D 小岛，并乘潜艇下潜看项目」这一绝妙创意，才启发我们从零编写了这套参数化、人人可自定义生成的开源引擎；
 - **视觉与交互美学**：致敬《模拟人生》（*The Sims*）、《纪念碑谷》（*Monument Valley*）以及 WebGL 社区经典的低多边形等距微缩景观（Isometric Low-Poly Diorama）设计美学；
 - **开源生态支持**：感谢 [Three.js](https://threejs.org/)、[Vite](https://vitejs.dev/) 与 [TypeScript](https://www.typescriptlang.org/) 提供的底层技术支撑。
 

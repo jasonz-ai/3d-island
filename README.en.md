@@ -356,7 +356,7 @@ npm run preview
 
 ## 🙏 Inspiration & Credits
 
-- **Original Creative Inspiration**: The initial spark for this project came from **[Joshua's World](https://joshuas.world/)** — seeing how a personal portfolio could be reimagined as a charming, explorable 3D miniature island inspired us to build this parametric, zero-code open-source engine from scratch so anyone can create their own 3D world;
+- **Original Creative Inspiration**: The initial spark for this project came from **[Marco Zhuang (@Marcozc19)](https://marcozc19.github.io/intro/)** and his delightful 3D island personal homepage — seeing how an individual's education, career journey, and projects could be reimagined as an explorable 3D miniature island inspired us to build this parametric, zero-code open-source engine from scratch so anyone can create their own 3D world;
 - **Visual & Interaction Aesthetics**: Inspired by *The Sims*, *Monument Valley*, and the classic isometric low-poly diorama tradition in the creative WebGL community;
 - **Open-Source Ecosystem**: Built on top of [Three.js](https://threejs.org/), [Vite](https://vitejs.dev/), and [TypeScript](https://www.typescriptlang.org/).
 

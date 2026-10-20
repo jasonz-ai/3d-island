@@ -703,6 +703,14 @@ describe('M-003 & M-004: Directed Motion & Rich 3D Builder Contracts', () => {
     expect(mobile.enabled).toBe(false)
     expect(mobile.offsetX).toBe(0)
 
+    const mobileLandscape = computeCameraViewOffset(844, 390, false)
+    expect(mobileLandscape.enabled).toBe(false)
+    expect(mobileLandscape.offsetX).toBe(0)
+
+    const immersiveFullscreen = computeCameraViewOffset(1440, 900, false, false, true)
+    expect(immersiveFullscreen.enabled).toBe(false)
+    expect(immersiveFullscreen.offsetX).toBe(0)
+
     // Multi-camera visual blind-audit harness (?cam=overview|closeup|side|realm)
     const rPos = { x: 0, y: 120, z: 32 }
     const rTar = { x: 0, y: 100, z: 0 }

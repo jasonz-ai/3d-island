@@ -3099,6 +3099,12 @@ export function bindAppUi(
     if (mobileHintFullscreenBtn) {
       mobileHintFullscreenBtn.textContent = active ? '退出全屏' : '⛶ 全屏'
     }
+    if (!currentSelectedId) {
+      world.resetOverview?.()
+      window.setTimeout(() => {
+        if (!currentSelectedId) world.resetOverview?.()
+      }, 180)
+    }
   }
 
   async function toggleFullscreenMode(): Promise<void> {
@@ -3156,7 +3162,7 @@ export function bindAppUi(
       // ignore on browsers without orientation lock
     }
 
-    window.scrollTo(0, 1)
+    window.scrollTo(0, 0)
     syncFullscreenButtons()
     if (enteredNative) {
       showToast('⛶ 已开启全屏沉浸视角（点右上角「退出全屏」可还原）')
@@ -3164,6 +3170,16 @@ export function bindAppUi(
       showToast('⛶ 已开启纯净全屏视野（已收起外围栏，点右上角「退出全屏」可还原）')
     }
   }
+
+  window.addEventListener('orientationchange', () => {
+    window.scrollTo(0, 0)
+    window.setTimeout(() => {
+      if (!currentSelectedId) world.resetOverview?.()
+    }, 120)
+    window.setTimeout(() => {
+      if (!currentSelectedId) world.resetOverview?.()
+    }, 320)
+  })
 
   fullscreenToggleBtn?.addEventListener('click', () => {
     void toggleFullscreenMode()

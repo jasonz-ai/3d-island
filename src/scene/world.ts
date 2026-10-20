@@ -69,6 +69,7 @@ export interface WorldController {
   getLevel: () => WorldLevel
   getLayout: () => WorldLayout
   renderAt: (timeSec: number) => void
+  resetOverview?: () => void
 }
 
 declare global {
@@ -466,8 +467,9 @@ export function computeCameraViewOffset(
   height: number,
   hasSelection: boolean,
   isBuildMode = false,
+  isImmersiveFullscreen = false,
 ): CameraViewOffsetSpec {
-  if (width < 720) {
+  if (width < 960 || height < 580 || isImmersiveFullscreen) {
     return {
       enabled: false,
       fullWidth: width,
@@ -629,13 +631,42 @@ export function createWorldController(
   let lastSimSec = 0
   let currentOffsetRatio = -0.12
 
+  type ViewportFramingMode = 'portrait' | 'landscape-centered' | 'desktop-editorial'
+  let lastFramingMode: ViewportFramingMode | null = null
+  let lastCssW = 0
+  let lastCssH = 0
+
+  function getViewportSize(): { w: number; h: number } {
+    const w = Math.max(1, Math.round(canvas.clientWidth || window.innerWidth || 1024))
+    const h = Math.max(1, Math.round(canvas.clientHeight || window.innerHeight || 768))
+    return { w, h }
+  }
+
+  function getFramingMode(w: number, h: number): ViewportFramingMode {
+    if (h > w * 1.15) return 'portrait'
+    const isFullscreen = document.body.classList.contains('island-immersive-fullscreen')
+    if (isFullscreen || w < 960 || h < 580) return 'landscape-centered'
+    return 'desktop-editorial'
+  }
+
   function getOverviewPose(targetLevel: WorldLevel): { pos: THREE.Vector3; target: THREE.Vector3 } {
     if (targetLevel === 'ground') {
-      const w = canvas.clientWidth || window.innerWidth
-      const h = canvas.clientHeight || window.innerHeight
-      const isPortrait = h > w * 1.15
+      const { w, h } = getViewportSize()
+      const mode = getFramingMode(w, h)
+      if (mode === 'portrait') {
+        return {
+          pos: new THREE.Vector3(1.0, 36.5, 65.0),
+          target: new THREE.Vector3(0, 1.6, 0),
+        }
+      }
+      if (mode === 'landscape-centered') {
+        return {
+          pos: new THREE.Vector3(0.0, 21.8, 38.0),
+          target: new THREE.Vector3(0.0, 0.4, 2.2),
+        }
+      }
       return {
-        pos: isPortrait ? new THREE.Vector3(1.0, 36.5, 65.0) : new THREE.Vector3(2.8, 25.5, 44.5),
+        pos: new THREE.Vector3(2.8, 25.5, 44.5),
         target: new THREE.Vector3(0, 1.6, 0),
       }
     }
@@ -1174,25 +1205,43 @@ export function createWorldController(
   }
 
   function updateCameraFraming(dt: number): void {
-    const w = canvas.clientWidth || window.innerWidth
-    const h = canvas.clientHeight || window.innerHeight
+    const { w, h } = getViewportSize()
     const aspect = w / Math.max(1, h)
     const targetFov = aspect < 0.95 ? Math.min(58, Math.round(35 / Math.pow(aspect, 0.65))) : 35
-    const resized = canvas.width !== w || canvas.height !== h || camera.fov !== targetFov
+    const resized = lastCssW !== w || lastCssH !== h || Math.abs(camera.fov - targetFov) > 1e-3
     if (resized) {
+      lastCssW = w
+      lastCssH = h
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
       renderer.setSize(w, h, false)
       camera.aspect = aspect
       camera.fov = targetFov
     }
+    const mode = getFramingMode(w, h)
+    if (lastFramingMode === null) {
+      lastFramingMode = mode
+    } else if (lastFramingMode !== mode) {
+      lastFramingMode = mode
+      if (level === 'ground' && !selectedId && !camPreset) {
+        const nextPose = getOverviewPose('ground')
+        flight = null
+        camera.position.copy(nextPose.pos)
+        controls.target.copy(nextPose.target)
+        controls.update()
+        camera.lookAt(controls.target)
+      }
+    }
     const hasSel = document.body.classList.contains('has-selection')
     const isBuildMode = document.body.classList.contains('build-mode')
-    const spec = computeCameraViewOffset(w, h, hasSel, isBuildMode)
+    const isFullscreen = document.body.classList.contains('island-immersive-fullscreen')
+    const spec = computeCameraViewOffset(w, h, hasSel, isBuildMode, isFullscreen)
     if (!spec.enabled) {
-      if (h > w * 1.15) {
+      currentOffsetRatio = 0
+      if (mode === 'portrait') {
         camera.setViewOffset(w, h, 0, Math.round(-0.08 * h), w, h)
       } else {
         camera.clearViewOffset()
-        if (resized) camera.updateProjectionMatrix()
+        camera.updateProjectionMatrix()
       }
       return
     }
@@ -1435,6 +1484,17 @@ export function createWorldController(
     stepFrame(timeSec, 0.016)
   }
 
+  function resetOverview(): void {
+    if (camPreset) return
+    const pose = getOverviewPose(level)
+    flight = null
+    camera.position.copy(pose.pos)
+    controls.target.copy(pose.target)
+    controls.update()
+    camera.lookAt(controls.target)
+    updateCameraFraming(0)
+  }
+
   window.renderAt = renderAt
 
   buildSceneContent()
@@ -1469,5 +1529,6 @@ export function createWorldController(
     getLevel: () => level,
     getLayout: () => layout,
     renderAt,
+    resetOverview,
   }
 }

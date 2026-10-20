@@ -146,8 +146,6 @@ body.dark-sky #haze-top {
 
 @media (hover: none) {
   .label {
-    opacity: 0.88;
-    pointer-events: auto;
     font-size: 10.5px;
     padding: 3px 9px;
   }
@@ -3098,7 +3096,8 @@ body.island-immersive-fullscreen .landscape-fullscreen-fab {
     padding: 5px 10px;
     font-size: 11.5px;
   }
-  .intro-sub-links {
+  .intro-sub-links,
+  .intro #fullscreen-toggle-btn {
     display: none;
   }
   .hint {

@@ -1,9 +1,12 @@
 <div align="center">
 
-# 🏝️ 3D Island Studio
+# 3D Island Studio
 
-**An Open-Source Low-Poly 3D Personal Website & Interactive Resume Builder**  
-*Turn your resume and portfolio into an interactive, customizable 3D miniature world — zero 3D modeling required.*
+<img src="./public/preview/demo.gif" alt="3D Island Studio demo: open a building to read the resume card, switch to desert and snow worlds, then dive by submarine into the project realm" width="720" />
+
+**Turn your resume into a 3D island people can explore. No 3D modeling: fill in your experience in the browser and it builds itself.**
+
+**[Try it live at studio.jasonz.xyz](https://studio.jasonz.xyz)** · [Real-world example: jasonz.xyz](https://jasonz.xyz)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-E8643A.svg)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6.svg)](https://www.typescriptlang.org/)
@@ -45,7 +48,7 @@ Most personal websites and portfolios are flat, 1D scrolling pages. While bespok
 **3D Island Studio** turns 3D personal world-building into a **parametric, zero-code experience**:
 - **Sims-Style Visual World Building**: Map your **Alma Mater**, **Hometown / Spirit Landmark**, and **1–6 Career Stops** onto a stylized low-poly 3D island;
 - **Dual-Realm Storytelling**: Explore your education and career buildings on the main island, then board a **Secret-Realm Carrier** (Submarine, Camel Caravan, Snowball Ski, Rocket, or Hot-Air Balloon) to travel to a secondary realm showcasing your flagship projects;
-- **Ready in Minutes**: Paste your plain-text resume in the browser, swap 3D buildings with one click, share a serverless `#island=` URL, or export the JSON to deploy your own permanent site on Vercel / GitHub Pages.
+- **Ready in Minutes**: Fill in your experience in the browser form, swap 3D buildings with one click, share a serverless `#island=` URL, or export the JSON to deploy your own permanent site on Vercel / GitHub Pages.
 
 ---
 
@@ -68,7 +71,7 @@ Most personal websites and portfolios are flat, 1D scrolling pages. While bespok
 | **🚀 5 Secret-Realm Carriers** | **Submarine Dive** (Deep Sea), **Camel Caravan** (Desert Oasis), **Snowball Ski** (Aurora Valley), **Rocket Launch** (Low-Earth Orbit), and **Hot-Air Balloon** (Cloud Islands) |
 | **🏛️ 37 Parametric 3D Buildings** | **10 Education** + **10 Hometown/Spirit Landmarks** + **17 Career HQs** — all procedurally built in Three.js with granite plinths, warm courtyard pathway lanterns, entrance canopies, and floating Plumbob crystals |
 | **🛠 Sims-Style 3D Build Dock** | Click any building to swap its 3D model, rotate 90°, apply 6 roof tint palettes, scale (0.7×–1.45×), nudge X/Z coordinates, and place 6 island decor props (B-612 Rose, Fox Bench, Cherry Grove, Campfire Tent, Dutch Windmill, Pet Corgi) |
-| **📄 Smart Resume Text Parser** | Paste any English or Chinese plain-text resume to automatically extract your name, tagline, university, companies, roles, and projects into a 3D island |
+| **📄 Browser Form & JSON Import** | Fill in your name, tagline, university, companies, roles, periods, and projects in the customize drawer, or paste a `ProfileConfig` JSON to import it; the 3D island rebuilds on apply |
 | **🎵 Dual-Engine Acoustic Radio** | Default-on lightweight stereo loop tracks (`morning-breeze` / `warm-sunset` / `starlight-ambient.mp3`) + real-time WebAudio harmonic synthesizer |
 | **🔗 Serverless Share & Polaroid** | Encode your entire custom island into a `#island=<base64url>` share link (`?view=visitor`), or export a high-res Polaroid PNG postcard |
 
@@ -81,9 +84,9 @@ Most personal websites and portfolios are flat, 1D scrolling pages. While bespok
 If you want to create and share your 3D island right inside the browser **without writing a single line of code**:
 
 1. **Explore Persona Templates**: Click the 4 persona pills in the top-left **✦ Presets** strip to preview different biomes and career setups;
-2. **Import Your Resume in 1 Click**:
+2. **Fill In Your Experience**:
    - Click **🛠 建造模式 (Build Mode)** in the top-left HUD → click **📂 全量表单 / JSON (Full Form / JSON)** in the bottom build dock;
-   - Paste your resume text into the **📄 Paste Resume Text** box at the top of the drawer and click **✨ Parse & Generate My 3D Island**;
+   - In the **定制我的 3D 世界 (Customize My 3D World)** drawer, fill in your name, tagline, schools, and career stops, then click **应用并刷新 3D 世界 (Apply & Rebuild)**; if you already have a JSON profile, paste it under **导入 / 导出 JSON** and click **从 JSON 导入 (Import from JSON)**;
 3. **Customize in Sims 3D Build Mode**:
    - Click any slot pill in the bottom dock (`🎓 Alma Mater`, `🏮 Landmark`, `🏢 Career 1–6`, `🌍 Terrain Shape`, `✨ Decor Props`) or click any 3D building directly on the island;
    - Pick from 37 architectural styles in the left catalog grid to swap the 3D building in real time;
@@ -328,8 +331,7 @@ npm run preview
 ├── src/
 │   ├── data/
 │   │   ├── defaultProfile.ts     # Default open-source starter profile (Alex Rivera)
-│   │   ├── personaPresets.ts     # 4 curated 1-click persona world templates
-│   │   └── resumeParser.ts       # Plain-text resume parser (EN/ZH)
+│   │   └── personaPresets.ts     # 4 curated 1-click persona world templates
 │   ├── schema/
 │   │   └── profile.ts            # ProfileConfig types, 37 building styles, validation & #island= codec
 │   ├── scene/
@@ -337,7 +339,7 @@ npm run preview
 │   │   ├── layout.ts             # 6 non-circular heightfields, SDF collision avoidance & sightlines
 │   │   ├── terrain.ts            # 4 biome terrain meshes, bridges, boardwalks, props & foliage
 │   │   ├── buildings.ts          # 37 procedural low-poly 3D buildings & 5 project booths
-│   │   ├── carriers.ts           # 5 secret-realm transition carriers & spring animations
+│   │   ├── realms.ts             # 5 secret-realm transition carriers & realm scenes
 │   │   └── sound.ts              # UI interaction sound synthesis
 │   ├── ui/
 │   │   ├── appUi.ts              # Top-left HUD, Sims 3D build dock, AI prompt modal & drawers
